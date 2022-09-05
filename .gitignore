@@ -2,3 +2,5 @@ Results/
 download
 try_file.py
 __pycache__
+.ipynb_checkpoints
+Results_Cleaned.zip
