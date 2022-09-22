@@ -9,7 +9,7 @@ The second highest scores been shown by SVM_Ext model. Ext means the normalisati
 The score is: 49.20%
 
 After that the results were as follows:
-[best score](img/best_score.png)
+![best score](img/best_score.png)
 
 
 ## Table of Contents
@@ -60,23 +60,22 @@ After that the results were as follows:
 
 
 ## Screenshots
-[Score Table after the download and data cleanup/processing](img/score_dataframe.png)
+![Score Table after the download and data cleanup/processing](img/score_dataframe.png)
 
-[Heatmap shows no NA values in the data set with all features](img/na_summary.png)
+![Heatmap shows no NA values in the data set with all features](img/na_summary.png)
 
-[Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win](img/Output_countplot.png)
+![Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win](img/Output_countplot.png)
 
-[Overview of the distribution of all features](img/features_distribution.png)
+![Overview of the distribution of all features](img/features_distribution.png)
 
-[Correlation matrix between features/columns](img/corr_matrix_heatmap.png)
+![Correlation matrix between features/columns](img/corr_matrix_heatmap.png)
 
-[Cleaned Data from 2_liga League as DataFrame](img/clean_data_2_liga.png)
+![Cleaned Data from 2_liga League as DataFrame](img/clean_data_2_liga.png)
 
-[List of accuracy scores per model for 2_liga](img/Model_accuracy_ligue2.png)
+![List of accuracy scores per model for 2_liga](img/Model_accuracy_ligue2.png)
 
-[Mean accuracy values per league](img/mean_values_accuracy_league.png)
+![Mean accuracy values per league](img/mean_values_accuracy_league.png)
 
-[]
 
 ## Setup
 Required Libraries:
