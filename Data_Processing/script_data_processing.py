@@ -68,6 +68,7 @@ score_df['Away_Score'] = pd.to_numeric(score_df['Away_Score'], errors='coerce')
 score_df = score_df.dropna()
 cols = ['Season', 'Round', 'Home_Score','Away_Score']
 score_df[cols]=score_df[cols].astype('int')
+
 score_df['Wins']=0
 score_df['Wins'] = np.where(score_df['Home_Score'] > score_df['Away_Score'], 1, score_df['Wins'])
 score_df['Wins'] = np.where(score_df['Home_Score'] < score_df['Away_Score'], -1, score_df['Wins'])
