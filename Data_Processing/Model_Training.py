@@ -8,6 +8,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -17,26 +20,28 @@ import glob
 #MODEL TRAINING FUNCTIONS
 
 #Write in results
-Models_results=pd.DataFrame(columns=['League','Model','Accuracy'])
+Models_results=pd.DataFrame()
 
-def update_dict(n1,n2,n3):
+def update_dict(n1,n2,n3,n4):
     """Function is used to update dataframe through dictionary update.
     Args:
         n1 (str): Name of the League, obtained from the file name. Or all for all data set
         n2 (str): Name of the model being applied
         n3 (float): Accuracy score calculated after model application to the train set
+        n4 (float): Accuracy score calculated after model application to the test set
     """
     result={}
     result['League']=n1
     result['Model']=n2
-    result['Accuracy']=n3
+    result['Train_Accuracy']=n3
+    result['Test_Accuracy']=n4
     return(pd.DataFrame([result]))
 
 
 def train_model (X,Y,model):
     """This function applies pre-defined model to the given set of features and outcomes.
     The train/test split is set at 80/20.
-    Return accuracy score
+    Return accuracy scores for train set and for test set
 
     Args:
         X (dataframe): dataset with features (can be scaled, normalised, standardised)
@@ -45,7 +50,9 @@ def train_model (X,Y,model):
     """
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
     model.fit(X_train, y_train)
-    return(model.score(X_test, y_test))
+    n3=model.score(X_train, y_train)
+    n4=model.score(X_test, y_test)
+    return(n3, n4)
     
 #%%
 #Upload all data for the first model training.
@@ -96,13 +103,13 @@ sns.heatmap(X.corr(), xticklabels=X.columns, yticklabels=X.columns)
 #LOGISTIC REGRESSION
 LR_model=LogisticRegression()
 mscore=train_model(X, Y, LR_model)
-temp_df=update_dict('All', 'LogReg', mscore)
+temp_df=update_dict('All', 'LogReg', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 # LOGISTIC REGRESSION with scaling Capacity data
 scaler = StandardScaler()
 mscore=train_model(scaler.fit_transform(X), Y, LR_model)
-temp_df=update_dict('All', 'LogReg_Scale', mscore)
+temp_df=update_dict('All', 'LogReg_Scale', mscore[0],mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #LOGISTIC REGRESSION EXTENDED: standardizing Gaussian distributed features and normalizing Non-Gaussian features
@@ -118,30 +125,54 @@ preprocessor = ColumnTransformer(transformers=[('standard', Standardize_transfor
 #LOGISTIC REGRESSION Extended
 LR_Ext_model = Pipeline(steps=[('preprocessor', preprocessor),('classifier', LogisticRegression(solver='lbfgs'))])
 mscore=train_model(X, Y, LR_Ext_model)
-temp_df=update_dict('All', 'LogReg_Ext', mscore)
+temp_df=update_dict('All', 'LogReg_Ext', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #RANDOM FOREST MODEL
 RF_model=RandomForestClassifier()
 mscore=train_model(X, Y, RF_model)
-temp_df=update_dict('All', 'RandForest', mscore)
+temp_df=update_dict('All', 'RandForest', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #RANDOM FOREST MODEL Scaler
 mscore=train_model(scaler.fit_transform(X), Y, RF_model)
-temp_df=update_dict('All', 'RandForest_Scaler', mscore)
+temp_df=update_dict('All', 'RandForest_Scaler', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #SVM - Support Vector Machines - with Scaler
 SVM_model = svm.SVC(kernel='linear')
 mscore=train_model(scaler.fit_transform(X), Y, SVM_model)
-temp_df=update_dict('All', 'SVM_Scaler', mscore)
+temp_df=update_dict('All', 'SVM_Scaler', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #SVM Ext: standardizing Gaussian distributed features and normalizing Non-Gaussian features
 SVM_Ext_model = Pipeline(steps=[('preprocessor', preprocessor),('classifier', svm.SVC(kernel='linear'))])
 mscore=train_model(X, Y, SVM_Ext_model)
-temp_df=update_dict('All', 'SVM_Ext', mscore)
+temp_df=update_dict('All', 'SVM_Ext', mscore[0], mscore[1])
+Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+#Building DECISION TREE MODEL for the set of all data features
+DTree_model = DecisionTreeClassifier(max_depth=1, random_state=42)
+mscore=train_model(scaler.fit_transform(X), Y, DTree_model)
+temp_df=update_dict('All', 'DTree_Scaler', mscore[0], mscore[1])
+Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+#ADABOOST Model on Decision Tree model
+AdaBoost_model = AdaBoostClassifier(base_estimator=DTree_model, n_estimators=500, learning_rate=0.5, random_state=42)
+mscore=train_model(scaler.fit_transform(X), Y, AdaBoost_model)
+temp_df=update_dict('All', 'AdaBoost_DecTree', mscore[0], mscore[1])
+Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+#ADABOOST Model on LogReg_Scaler
+AdaBoost_model = AdaBoostClassifier(base_estimator=LR_model, n_estimators=500, learning_rate=0.5, random_state=42)
+mscore=train_model(scaler.fit_transform(X), Y, AdaBoost_model)
+temp_df=update_dict('All', 'AdaBoost_LogReg', mscore[0], mscore[1])
+Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+#GRADIENT BOOST Model
+GradBoost_model= GradientBoostingClassifier(learning_rate=0.5, n_estimators=100)
+mscore=train_model(scaler.fit_transform(X), Y, GradBoost_model)
+temp_df=update_dict('All', 'GradBoost', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 #%%
@@ -163,13 +194,13 @@ for f in result_files:
     #LOGISTIC REGRESSION
     LR_model=LogisticRegression()
     mscore=train_model(X, Y, LR_model)
-    temp_df=update_dict(league, 'LogReg', mscore)
+    temp_df=update_dict(league, 'LogReg', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     # LOGISTIC REGRESSION with scaling Capacity data
     scaler = StandardScaler()
     mscore=train_model(scaler.fit_transform(X), Y, LR_model)
-    temp_df=update_dict(league, 'LogReg_Scale', mscore)
+    temp_df=update_dict(league, 'LogReg_Scale', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     #LOGISTIC REGRESSION EXTENDED: standardizing Gaussian distributed features and normalizing Non-Gaussian features
@@ -185,34 +216,59 @@ for f in result_files:
     #LOGISTIC REGRESSION Extended
     LR_Ext_model = Pipeline(steps=[('preprocessor', preprocessor),('classifier', LogisticRegression(solver='lbfgs'))])
     mscore=train_model(X, Y, LR_Ext_model)
-    temp_df=update_dict(league, 'LogReg_Ext', mscore)
+    temp_df=update_dict(league, 'LogReg_Ext', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     #RANDOM FOREST MODEL
     RF_model=RandomForestClassifier()
     mscore=train_model(X, Y, RF_model)
-    temp_df=update_dict(league, 'RandForest', mscore)
+    temp_df=update_dict(league, 'RandForest', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     #RANDOM FOREST MODEL Scaler
     mscore=train_model(scaler.fit_transform(X), Y, RF_model)
-    temp_df=update_dict(league, 'RandForest_Scaler', mscore)
+    temp_df=update_dict(league, 'RandForest_Scaler', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     #SVM - Support Vector Machines - with Scaler
     SVM_model = svm.SVC(kernel='linear')
     mscore=train_model(scaler.fit_transform(X), Y, SVM_model)
-    temp_df=update_dict(league, 'SVM_Scaler', mscore)
+    temp_df=update_dict(league, 'SVM_Scaler', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
     #SVM Ext: standardizing Gaussian distributed features and normalizing Non-Gaussian features
     SVM_Ext_model = Pipeline(steps=[('preprocessor', preprocessor),('classifier', svm.SVC(kernel='linear'))])
     mscore=train_model(X, Y, SVM_Ext_model)
-    temp_df=update_dict(league, 'SVM_Ext', mscore)
+    temp_df=update_dict(league, 'SVM_Ext', mscore[0], mscore[1])
     Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
+    #Building DECISION TREE MODEL for the set of all data features
+    DTree_model = DecisionTreeClassifier(max_depth=1, random_state=42)
+    mscore=train_model(scaler.fit_transform(X), Y, DTree_model)
+    temp_df=update_dict(league, 'DTree_Scaler', mscore[0], mscore[1])
+    Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+    #ADABOOST Model on Decision Tree
+    AdaBoost_model = AdaBoostClassifier(base_estimator=DTree_model, n_estimators=500, learning_rate=0.5, random_state=42)
+    mscore=train_model(scaler.fit_transform(X), Y, AdaBoost_model)
+    temp_df=update_dict(league, 'AdaBoost_DTree', mscore[0], mscore[1])
+    Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+    #ADABOOST Model on LogReg
+    AdaBoost_model = AdaBoostClassifier(base_estimator=LR_model, n_estimators=500, learning_rate=0.5, random_state=42)
+    mscore=train_model(scaler.fit_transform(X), Y, AdaBoost_model)
+    temp_df=update_dict(league, 'AdaBoost_LogReg', mscore[0], mscore[1])
+    Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+
+    #GRADIENT BOOST Model
+    GradBoost_model= GradientBoostingClassifier(learning_rate=0.5, n_estimators=100)
+    mscore=train_model(scaler.fit_transform(X), Y, GradBoost_model)
+    temp_df=update_dict(league, 'GradBoost', mscore[0], mscore[1])
+    Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+    
     print(f"Done {league}!")
 
 # %%
 Models_results.to_csv('model_accuracy.csv', index=False)  
-# %%
+
+#%%

@@ -1,12 +1,20 @@
 # Football Match Outcome Prediction
 The Football Match Outcome Prediction project: the user processes a large number of files that contain information about football matches that have taken place since 1990. The data has to be cleaned so it can be fed to the model. Then, different models are trained with the dataset, and the best performing model is selected. The hyperparameters of this model are tuned, so its performance is improved.
 
-CONCLUSION:
-The best prediction accuracy results has been obtained through SVM_Scaler model training. Scaler means the stadium capacity features had been scaled to match other features.
-The score is the same for all sets: 49.32%
+Trained Models:
+- Logistic Regression
+- Random Forest
+- Decision Tree
+- SVM
+- AdaBoost on Decision Tree
+- AdaBoost on Logistic Regression
+- Gradient Boost
 
-The second highest scores been shown by SVM_Ext model. Ext means the normalisation and standartisation preprocessing pipline has been applied to features set.
-The score is: 49.20%
+CONCLUSION:
+The best prediction accuracy results has been obtained through ADABOOST build on Decision Tree model, closely followed by SVM classifier. With scaled data: the stadium capacity features had been scaled to match other features.
+The score is the same for all sets: 49.32%
+The Random Forest model shows the most overfitting approach.
+The least succefful were the models that were fit without scaling. 
 
 After that the results were as follows:
 ![best score](img/best_score.png)
@@ -177,7 +185,8 @@ Project is: _in progress_
 ## Room for Improvement
 
 To do:
-- Train the following models: Decision Tree, K-Nearest Neighbour, Naive Bayes
+- Train the following models:K -Nearest Neighbour, Naive Bayes
+- Break data set into various subsets: seasons, city, etc.
 
 
 ## Acknowledgements
