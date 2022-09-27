@@ -12,12 +12,18 @@ Trained Models:
 
 CONCLUSION:
 The best prediction accuracy results has been obtained through ADABOOST build on Decision Tree model, closely followed by SVM classifier. With scaled data: the stadium capacity features had been scaled to match other features.
-The score is the same for all sets: 49.32%
-The Random Forest model shows the most overfitting approach.
-The least succefful were the models that were fit without scaling. 
+The test accuracy score is the same for all sets: 
+- AdaBoost on DTree: 49.53%
+- SVM : 49.32%
+
+The Random Forest model shows the most overfitting:
+- 99% on train vs. 47.55% on test data
+
+The least successful were the models that were fit without scaling. 
 
 After that the results were as follows:
-![best score](img/best_score.png)
+![DataFrame with results](img/results.png)
+![Best Score](img/best_score.png)
 
 
 ## Table of Contents
