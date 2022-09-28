@@ -9,6 +9,7 @@ Trained Models:
 - AdaBoost on Decision Tree
 - AdaBoost on Logistic Regression
 - Gradient Boost
+- MLP
 
 CONCLUSION:
 The best prediction accuracy results has been obtained through ADABOOST build on Decision Tree model, closely followed by SVM classifier. With scaled data: the stadium capacity features had been scaled to match other features.
@@ -25,7 +26,8 @@ After that the resultant DataSet is as follows:
 <br>
 ![DataFrame with results](img/results.png)
 <br>
-The bset accuracy scores are shown below:
+The best accuracy scores are shown below:
+<br>
 ![Best Score](img/best_score.png)
 
 
@@ -79,10 +81,13 @@ https://aicore-files.s3.amazonaws.com/Data-Science/Team_Info.csv - Stadium Data
 Score Table after the download and data cleanup/processing.
 ![Score Table after the download and data cleanup/processing](img/score_dataframe.png)
 
+List of all columns/data in the downloaded scv file
+![all columns](img/all_columns.png)
+
 Heatmap shows no NA values in the data set with all features.
 ![Heatmap shows no NA values in the data set with all features](img/na_summary.png)
 
-Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win.
+Frequency all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win.
 ![Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win](img/Output_countplot.png)
 
 Overview of the distribution of all features. The plot is used to evaluate gaussian and non-gaussian distribution of data

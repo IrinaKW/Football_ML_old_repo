@@ -11,16 +11,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn import svm
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import glob
 
 #%%
-#MODEL TRAINING FUNCTIONS
+#MODEL TRAINING MODULES
 
 #Write in results
 Models_results=pd.DataFrame()
+scaler = StandardScaler()
 
 def update_dict(n1,n2,n3,n4):
     """Function is used to update dataframe through dictionary update.
@@ -63,8 +65,6 @@ all_df = [pd.read_csv(f) for f in csv_files]
 pd.set_option('display.max_columns', None)
 all_df  = pd.concat(all_df, ignore_index=True)
 sns.heatmap(all_df.isnull())
-
-#%%
 all_df=all_df.dropna()
 sns.heatmap(all_df.isnull())
 all_df['Capacity']=all_df['Capacity'].astype('str')
@@ -107,7 +107,6 @@ temp_df=update_dict('All', 'LogReg', mscore[0], mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
 
 # LOGISTIC REGRESSION with scaling Capacity data
-scaler = StandardScaler()
 mscore=train_model(scaler.fit_transform(X), Y, LR_model)
 temp_df=update_dict('All', 'LogReg_Scale', mscore[0],mscore[1])
 Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
@@ -270,5 +269,18 @@ for f in result_files:
 
 # %%
 Models_results.to_csv('model_accuracy.csv', index=False)  
+
+# %%
+
+all_df.columns
+
+# %%
+#MLP Model: multilayer perceptron (MLP) is feedforward artificial neural network. 
+MLP_model = MLPClassifier(hidden_layer_sizes=(8,8,8), activation='relu', solver='adam', max_iter=500)
+mscore=train_model(scaler.fit_transform(X), Y, MLP_model)
+temp_df=update_dict('All', 'MLP', mscore[0], mscore[1])
+Models_results = pd.concat([Models_results, temp_df], ignore_index=True)
+# The outcome results Train- 50.01% and Test- 49.50%
+#Almost as high as AddBoost
 
 # %%
