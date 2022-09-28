@@ -21,8 +21,11 @@ The Random Forest model shows the most overfitting:
 
 The least successful were the models that were fit without scaling. 
 
-After that the results were as follows:
+After that the resultant DataSet is as follows:
+<br>
 ![DataFrame with results](img/results.png)
+<br>
+The bset accuracy scores are shown below:
 ![Best Score](img/best_score.png)
 
 
@@ -61,33 +64,40 @@ After that the results were as follows:
 
 ## Features
 - Data obtained from the following links:
-* https://aicore-files.s3.amazonaws.com/Data-Science/Football.zip - Score Data
-* https://aicore-files.s3.amazonaws.com/Data-Science/Match_Info.csv - Match Data
-* https://aicore-files.s3.amazonaws.com/Data-Science/Team_Info.csv - Stadium Data 
+https://aicore-files.s3.amazonaws.com/Data-Science/Football.zip - Score Data
+https://aicore-files.s3.amazonaws.com/Data-Science/Match_Info.csv - Match Data
+https://aicore-files.s3.amazonaws.com/Data-Science/Team_Info.csv - Stadium Data 
 
-- Scraper is used to scrape ELO scores for each team for Model training purposes from the provided links. The used website: www.besoccer.com
-* Key features: accept cookies and cancel subscription prior to scraping
+- Scraper is used to scrape ELO scores for each team for Model training purposes from the provided links. The used website: www.besoccer.com . Key features: accept cookies and cancel subscription prior to scraping
 
 - Model Training results show Accuracy scores per league as well as for the whole set
-* Models used: Logistic Regression, Random Forest, Support Vector Machine (SVM) 
-* X value set is used unmodified, scaled and piplined through standartisation and normalisation.
+
+- Models used: Logistic Regression, Random Forest, Support Vector Machine (SVM), Decision Tree, Gradient Boost and AdaBoost on Decision Tree and Logistic Regression. Features value set is used unmodified for Logistic Regression model training, however for the rest of the model it is scaled and/or piplined through standartisation and normalisation. If the features data set is unscaled, it is failed to converge.
 
 
 ## Screenshots
+Score Table after the download and data cleanup/processing.
 ![Score Table after the download and data cleanup/processing](img/score_dataframe.png)
 
+Heatmap shows no NA values in the data set with all features.
 ![Heatmap shows no NA values in the data set with all features](img/na_summary.png)
 
+Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win.
 ![Countplot that shows total counts of all outcomes for the Home_Team: -1 for Loss, 0 for Draw, 1 for Win](img/Output_countplot.png)
 
+Overview of the distribution of all features. The plot is used to evaluate gaussian and non-gaussian distribution of data
 ![Overview of the distribution of all features](img/features_distribution.png)
 
+Correlation matrix between features. The plot shows the most correlation are among hometeam and awayteam data, which is expected as the data repeats at times. 
 ![Correlation matrix between features/columns](img/corr_matrix_heatmap.png)
 
+En example of the cleaned and processed data used for the model training for one of the league, 2_liga.
 ![Cleaned Data from 2_liga League as DataFrame](img/clean_data_2_liga.png)
 
+Sample of the accuracy scores obtined for 2_liga league after the model training.
 ![List of accuracy scores per model for 2_liga](img/Model_accuracy_ligue2.png)
 
+The sanpshot of the overall accuracy scores for train and test data sets, per each league.
 ![Mean accuracy values per league](img/mean_values_accuracy_league.png)
 
 
